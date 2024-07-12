@@ -1,0 +1,50 @@
+# Функция с двумя аргументами, упаковка чисел #
+# вычисление NOD для двух чисел меньше 10000 #
+
+# так как функции в языке могут принимать только один аргумент, существуют специальные функции
+  с приставкой zip, которые упаковывают два аргумента в одно число, а внутри функции распаковывают #
+
+
+let a 18
+let b 24
+
+let zip_first
+	action go_zip_first
+		<< [go_zip_first] { null } * 10000 >>
+let zip_second
+	action go_zip_second
+		<< [go_zip_second] { null } >>
+let unzip_first 
+	action go_unzip_first
+		<< [go_unzip_first] { null } / 10000 >>
+let unzip_second
+	action go_unzip_second
+		<< [go_unzip_second] { null } % 10000 >>	
+
+let_rec NOD 
+	action zip
+		let first 
+			action go_first << [unzip_first] { [zip] { null } } >>
+		let second 
+			action go_second << [unzip_second] { [zip] { null } } >>
+		let calc
+			if << [first] { 0 } != 0 && [second] { 0 } != 0 >>
+                [first] { 0 }
+			 	#
+				if << [first] { 0 } > [second] { 0 } >>
+					<< [NOD] { [zip_first] { [first] { 0 } % [second] { 0 } } + [zip_second] { [second] { 0 } } } >>
+				else
+					<< [NOD] { [zip_first] { [first] { 0 } } + [zip_second] { [second] { 0 } % [first] { 0 } } } >> 
+                #
+			else
+                [second] { 0 }
+				# << [first] { 0 } + [second] { 0 } >> #
+		<< [calc] { } >> 
+
+		
+<< [NOD] { [zip_first] { 18 } + [zip_second] { 24 } } >>
+	
+		
+
+
+
